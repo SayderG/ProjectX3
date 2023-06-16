@@ -23,3 +23,4 @@ class UsersRepository(BaseRepository):
         self.session.add(user)
         await self.session.commit()
         return user
+
