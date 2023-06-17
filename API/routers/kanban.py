@@ -47,7 +47,7 @@ async def get_column(funnel_id: int, db=Depends(AsyncDatabase.get_session)):
     return columns
 
 
-@router.delete("/{funnel_id}/columns/{column_id}", status_code=204)
+@router.delete("/{funnel_id}/columns/{column_id}")
 async def delete_column(funnel_id: int, column_id: int, db=Depends(AsyncDatabase.get_session)):
     funnel = await KanbanRepository(db).get(funnel_id)
     if not funnel:

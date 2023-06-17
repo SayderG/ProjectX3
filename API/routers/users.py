@@ -28,6 +28,6 @@ async def registration_user(RegData: UserReg, session=Depends(AsyncDatabase.get_
     return await UsersRepository(session).registration(RegData)
 
 
-@router.delete('/{user_id}', name='delete user by id', response_model=UserRead)
+@router.delete('/{user_id}', name='delete user by id')
 async def del_user(user_id: int, session=Depends(AsyncDatabase.get_session)):
     return await UsersRepository(session).delete(user_id)
