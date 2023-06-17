@@ -1,7 +1,6 @@
-from database.models.Users import Users, UserLogin
+from database.models.users import Users, UserLogin, UserReg
 from database.repositories.BaseRepository import BaseRepository
 from fastapi import HTTPException
-from database.models.Users import UserReg
 from sqlalchemy import select
 
 

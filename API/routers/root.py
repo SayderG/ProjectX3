@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from database.base import AsyncDatabase
-from database.models.users import Users
 
 router = APIRouter()
 

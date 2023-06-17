@@ -8,7 +8,7 @@ parser.add_argument('cuda', nargs='?', default=False)
 
 class CameraControl:
     def __init__(self, cuda: bool = False, url=0):
-        self._YOLO_VERSION = "v3"
+        self._YOLO_VERSION = "v4-tiny"
         self._MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
         self._is_cuda = cuda
         self._capture = cv2.VideoCapture(url)
@@ -17,7 +17,8 @@ class CameraControl:
         self._class_list = self.load_classes()
 
     def build_model(self):
-        net = cv2.dnn.readNet("CV/models/yolo/yolov3.weights", "CV/models/yolo/yolov3.cfg")
+        net = cv2.dnn.readNet(f"models/yolo/yolo{self._YOLO_VERSION}.weights",
+                              f"models/yolo/yolo{self._YOLO_VERSION}.cfg")
         if self._is_cuda:
             print("Attempty to use CUDA")
             net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
@@ -32,7 +33,7 @@ class CameraControl:
         return model
 
     def load_classes(self):
-        with open("CV/models/classes.txt", "r") as f:
+        with open("models/classes.txt", "r") as f:
             class_list = [cname.strip() for cname in f.readlines()]
         return class_list
 
@@ -71,4 +72,4 @@ class CameraControl:
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    CameraControl(url="src/Dron.mp4", cuda=args.cuda).video_detector()
+    CameraControl(url="src/Dron3.mp4", cuda=False).video_detector()
