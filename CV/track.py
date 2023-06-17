@@ -1,6 +1,8 @@
 import cv2
 import argparse
 
+import torch as torch
+
 parser = argparse.ArgumentParser()
 parser.add_argument('url', nargs='?', default=0)
 parser.add_argument('cuda', nargs='?', default=False)
@@ -13,7 +15,7 @@ class CameraControl:
         self._is_cuda = cuda
         self._capture = cv2.VideoCapture(url)
         self._colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]
-        self._model = self.build_model()
+        self._model = None
         self._class_list = self.load_classes()
 
     def build_model(self):
@@ -37,13 +39,13 @@ class CameraControl:
             class_list = [cname.strip() for cname in f.readlines()]
         return class_list
 
-    def person_check(self, frame):
+    def frame_check(self, frame, needed_class='car'):
         classIds, confidences, boxes = self._model.detect(frame, .2, .4)
         person_counter = 0
         for (classid, confidence, box) in zip(classIds, confidences, boxes):
             color = self._colors[int(classid) % len(self._colors)]
             class_name = self._class_list[classid]
-            if class_name == 'car' and confidence > 0.3:
+            if class_name == needed_class and confidence > 0.3:
                 person_counter += 1
                 cv2.rectangle(frame, box, color, 2)
         cv2.putText(
@@ -57,19 +59,23 @@ class CameraControl:
             fontFace=cv2.FONT_HERSHEY_COMPLEX
         )
 
-    def video_detector(self):
+    def video_detector_any(self):
+        self._model = self.build_model()
         while cv2.waitKey(1) < 1:
-
             ret, frame = self._capture.read()
-
-            if not ret:
-                break
-
-            self.person_check(frame)
-
+            if not ret: break
+            self.frame_check(frame)
             cv2.imshow("Neuron demo", frame)
+
+    def video_detector_v5(self):
+        self._model = torch.hub.load("ultralytics/yolov5", 'custom', 'models/yolo/yolov5.pt')
+        while cv2.waitKey(1) < 1:
+            ret, frame = self._capture.read()
+            if not ret: break
+            frame = self._model(frame)
+            cv2.imshow("Neuron demo", frame.render(labels=False)[0])
 
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    CameraControl(url="src/Dron3.mp4", cuda=False).video_detector()
+    CameraControl(url="src/Dron.mov", cuda=False).video_detector_v5()

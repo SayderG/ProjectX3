@@ -32,7 +32,8 @@ async def main():
     logger.info("Starting bot")
     config = get_conf(".env")
 
-    storage = RedisStorage2(host=config.redis.host, port=config.redis.port, password=config.redis.password) if config.bot.use_redis else MemoryStorage()
+    storage = RedisStorage2(host=config.redis.host, port=config.redis.port,
+                            password=config.redis.password) if config.bot.use_redis else MemoryStorage()
     bot = Bot(token=config.bot.token, parse_mode='HTML')
     dp = Dispatcher(bot, storage=storage)
     session = await AsyncDatabase.get_session_maker()
