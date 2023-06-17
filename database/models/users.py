@@ -2,7 +2,6 @@ from typing import Optional
 from sqlmodel import SQLModel, Field
 import bcrypt
 
-
 class UserBase(SQLModel):
     username: str
     login: str
