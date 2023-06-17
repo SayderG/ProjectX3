@@ -37,4 +37,4 @@ class BaseRepository:
             return None
         await self.session.delete(model)
         await self.session.commit()
-        return
+        return 200

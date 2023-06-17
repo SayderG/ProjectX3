@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field
 from pydantic import condecimal, validator
@@ -9,6 +10,8 @@ class StoryBase(SQLModel):
     subtitle: str
     type: str
     description: str
+    created_ad: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    active: bool = Field(default=True)
 
 
 class Stories(StoryBase, table=True):

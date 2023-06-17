@@ -22,6 +22,6 @@ async def traffic_by_id(traffic_id: int, session=Depends(AsyncDatabase.get_sessi
     return await TrafficsRepository(session).by_id(traffic_id)
 
 
-@router.delete('/{traffic_id}', name='delete traffic by id', response_model=TrafficRead)
+@router.delete('/{traffic_id}', name='delete traffic by id')
 async def del_traffic(traffic_id: int, session=Depends(AsyncDatabase.get_session)):
     return await TrafficsRepository(session).delete(traffic_id)

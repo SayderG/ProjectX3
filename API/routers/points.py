@@ -23,6 +23,6 @@ async def point_by_id(point_id: int, session=Depends(AsyncDatabase.get_session))
     return await PointsRepository(session).by_id(point_id)
 
 
-@router.delete('/{point_id}', name='delete point by id', response_model=PointRead)
+@router.delete('/{point_id}', name='delete point by id')
 async def del_point(point_id: int, session=Depends(AsyncDatabase.get_session)):
     return await PointsRepository(session).delete(point_id)

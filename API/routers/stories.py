@@ -23,6 +23,6 @@ async def story_by_id(story_id: int, session=Depends(AsyncDatabase.get_session))
     return await StoriesRepository(session).by_id(story_id)
 
 
-@router.delete('/{story_id}', name='delete story by id', response_model=StoryRead)
+@router.delete('/{story_id}', name='delete story by id')
 async def del_story(story_id: int, session=Depends(AsyncDatabase.get_session)):
     return await StoriesRepository(session).delete(story_id)
