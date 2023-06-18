@@ -6,7 +6,8 @@ from fastapi import HTTPException
 
 
 class PointBase(SQLModel):
-    point: List[List[condecimal(max_digits=18, decimal_places=15)]] = Field(sa_column=Column(ARRAY(NUMERIC, dimensions=2)))
+    point: List[List[condecimal(max_digits=18, decimal_places=15)]] = Field(
+        sa_column=Column(ARRAY(NUMERIC, dimensions=2)))
     type: str
     radius: int = Field(default=0)
     description: str = Field(max_length=64)
@@ -21,10 +22,10 @@ class Points(PointBase, table=True):
 class PointCreate(PointBase):
     @validator('type')
     def validate_type(cls, value):
-        if value.lower() in ['alert', 'critical', 'normal', 'simple']:
+        if value.lower() in ['traffic_light', 'road', 'building']:
             return value.lower()
         else:
-            raise HTTPException(404, detail='most be only alert, critical, normal or simple')
+            raise HTTPException(404, detail='most be only traffic_light, road or building')
 
 
 class PointRead(PointBase):

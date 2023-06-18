@@ -56,7 +56,7 @@ class KanbanRepository(BaseRepository):
     async def move_card(self, card_id: int, column_id: int):
         card = await self.session.get(Cards, card_id)
         if not card:
-            raise HTTPException(status_code=404, detail="Task not found")
+            raise HTTPException(status_code=404, detail="card not found")
         card.column_id = column_id
         await self.session.commit()
         return card

@@ -16,6 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
     max_age=3600,
 )
+
 main_router.include_router(root.router, tags=['root'])
 main_router.include_router(users.router, tags=['users'], prefix='/users')
 main_router.include_router(points.router, tags=['points'], prefix='/points')
