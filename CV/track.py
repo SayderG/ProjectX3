@@ -1,6 +1,7 @@
 import cv2
 import argparse
 import torch as torch
+from pandas.core.series import Series
 
 parser = argparse.ArgumentParser()
 parser.add_argument('url', nargs='?', default=0)
@@ -40,16 +41,16 @@ class CameraControl:
 
     def frame_check(self, frame, needed_class='car'):
         classIds, confidences, boxes = self._model.detect(frame, .2, .4)
-        person_counter = 0
+        obj_counter = 0
         for (classid, confidence, box) in zip(classIds, confidences, boxes):
             color = self._colors[int(classid) % len(self._colors)]
             class_name = self._class_list[classid]
             if class_name == needed_class and confidence > 0.3:
-                person_counter += 1
+                obj_counter += 1
                 cv2.rectangle(frame, box, color, 2)
         cv2.putText(
             img=frame,
-            text=f"{person_counter} машин",
+            text=f"{obj_counter} объектов",
             org=(frame.shape[1] - 320, 64),
             thickness=2,
             color=(200, 20, 20),
@@ -58,15 +59,36 @@ class CameraControl:
             fontFace=cv2.FONT_HERSHEY_COMPLEX
         )
 
-    def video_detector_any(self):
+    def video_detector_any_v5(self, class_name='car'):
+        self._model = torch.hub.load("ultralytics/yolov5", 'yolov5s', pretrained=True)
+        while cv2.waitKey(1) < 1:
+            ret, frame = self._capture.read()
+            if not ret: break
+            frame = self._model(frame)
+            xz: Series = frame.pandas().xyxy[-1].name
+            lst = [car for car in xz.to_dict().values() if car == class_name]
+            render = frame.render(labels=True)[0]
+            cv2.putText(
+                img=render,
+                text=f"{len(lst)} {class_name}]",
+                org=(render.shape[1] - 360, 64),
+                thickness=2,
+                color=(200, 20, 20),
+                lineType=cv2.LINE_AA,
+                fontScale=1.5,
+                fontFace=cv2.FONT_HERSHEY_COMPLEX
+            )
+            cv2.imshow("Neuron demo", render)
+
+    def video_detector_v4(self):
         self._model = self.build_model()
         while cv2.waitKey(1) < 1:
             ret, frame = self._capture.read()
             if not ret: break
-            self.frame_check(frame)
+            self.frame_check(frame, needed_class='dog')
             cv2.imshow("Neuron demo", frame)
 
-    def video_detector_v5(self):
+    def video_detector_cars_v5(self):
         self._model = torch.hub.load("ultralytics/yolov5", 'custom', 'models/yolo/yolov5.pt')
         while cv2.waitKey(1) < 1:
             ret, frame = self._capture.read()
@@ -77,4 +99,4 @@ class CameraControl:
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    CameraControl(url="src/Dron.mov", cuda=False).video_detector_v5()
+    CameraControl(url="src/Dron3.mp4", cuda=False).video_detector_any_v5()
