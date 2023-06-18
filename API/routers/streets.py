@@ -14,6 +14,11 @@ async def predict(date: datetime.datetime, session=Depends(AsyncDatabase.get_ses
     return await StreetRepository(session).predict(date)
 
 
+@router.get('/predict/{street_id}/month', name='predict on month')
+async def predict_by_street_id(street_id: int, session=Depends(AsyncDatabase.get_session)):
+    return await StreetRepository(session).predict_month(street_id)
+
+
 @router.post('/', name='create street', response_model=StreetRead)
 async def create_street(point: StreetCreate, session=Depends(AsyncDatabase.get_session)):
     return await StreetRepository(session).create(point.__dict__)

@@ -14,6 +14,3 @@ def generate_model(train_path: str = 'training_data.csv'):
         pickle.dump(model_lgbm, f)
     return 200
 
-import os
-print(os.getcwd())
-
