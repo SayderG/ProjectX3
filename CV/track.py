@@ -1,6 +1,5 @@
 import cv2
 import argparse
-
 import torch as torch
 
 parser = argparse.ArgumentParser()

@@ -12,7 +12,7 @@ class Columns(ColumnBase, table=True):
 
     funnel_id: int = Field(foreign_key="funnels.id")
     funnel: Optional["Funnels"] = Relationship(back_populates="columns", sa_relationship_kwargs={"lazy": 'selectin'})
-    tasks: List["Tasks"] = Relationship(back_populates="column", sa_relationship_kwargs={"lazy": 'selectin'})
+    cards: List["Cards"] = Relationship(back_populates="column", sa_relationship_kwargs={"lazy": 'selectin'})
 
 
 class ColumnCreate(ColumnBase):

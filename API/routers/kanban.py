@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from database.base import AsyncDatabase
 from database.models.funnels import FunnelRead, FunnelCreate, FunnelReadAll
 from database.models.columns import ColumnRead, ColumnCreate, ColumnReadWithCount
-from database.models.tasks import TaskRead, TaskCreate
+from database.models.cards import CardRead, CardCreate
 
 router = APIRouter()
 
@@ -69,29 +69,17 @@ async def get_column(funnel_id: int, column_id: int, db=Depends(AsyncDatabase.ge
     return column
 
 
-# tasks
-@router.post("/columns/{column_id}/tasks", response_model=TaskRead, status_code=201)
-async def create_task(column_id: int, task: TaskCreate, db=Depends(AsyncDatabase.get_session)):
-    column = await KanbanRepository(db).get_column(column_id)
-    if not column:
-        raise HTTPException(status_code=404, detail="Column not found")
-    return await KanbanRepository(db).create_task(column_id, task)
-
-
-@router.get("/columns/{column_id}/tasks", response_model=list[TaskRead])
-async def get_tasks(column_id: int, db=Depends(AsyncDatabase.get_session)):
+@router.get("/columns/{column_id}/cards", response_model=list[CardRead])
+async def get_cards(column_id: int, db=Depends(AsyncDatabase.get_session)):
     column = await KanbanRepository(db).get_column(column_id)
     if not column:
         raise HTTPException(status_code=404, detail="Column not found")
     return column.tasks
 
 
-@router.put("/columns/{column_id}/tasks/{task_id}", response_model=TaskRead)
-async def move_task(column_id: int, task_id: int, db=Depends(AsyncDatabase.get_session)):
+@router.put("/columns/{column_id}/cards/{card_id}", response_model=CardRead)
+async def move_card(column_id: int, task_id: int, db=Depends(AsyncDatabase.get_session)):
     column = await KanbanRepository(db).get_column(column_id)
     if not column:
         raise HTTPException(status_code=404, detail="Column not found")
-    task = await KanbanRepository(db).get_task(task_id)
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return await KanbanRepository(db).move_task(task_id, column_id)
+    return await KanbanRepository(db).move_card(task_id, column_id)

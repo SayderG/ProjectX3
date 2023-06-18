@@ -1,7 +1,7 @@
 from fastapi import FastAPI, APIRouter
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
-from API.routers import root, points, stories, maps, traffics, users, kanban
+from API.routers import root, points, cards, maps, traffics, users, kanban, streets
 
 app = FastAPI()
 main_router = APIRouter()
@@ -19,7 +19,8 @@ app.add_middleware(
 main_router.include_router(root.router, tags=['root'])
 main_router.include_router(users.router, tags=['users'], prefix='/users')
 main_router.include_router(points.router, tags=['points'], prefix='/points')
-main_router.include_router(stories.router, tags=['stories'], prefix='/stories')
+main_router.include_router(cards.router, tags=['cards'], prefix='/cards')
+main_router.include_router(streets.router, tags=['streets'], prefix='/streets')
 main_router.include_router(maps.router, tags=['maps'], prefix='/maps')
 main_router.include_router(traffics.router, tags=['traffics'], prefix='/traffics')
 main_router.include_router(kanban.router, tags=['kanban'], prefix='/kanban')

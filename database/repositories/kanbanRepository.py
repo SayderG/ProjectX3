@@ -1,8 +1,8 @@
+from fastapi import HTTPException
 from sqlalchemy import select
 from database.models.funnels import Funnels, FunnelCreate
 from database.models.columns import Columns, ColumnCreate
-from database.models.task_detail import Tasks_detail
-from database.models.tasks import Tasks, TaskCreate
+from database.models.cards import Cards, CardCreate
 from database.repositories.BaseRepository import BaseRepository
 
 
@@ -52,33 +52,11 @@ class KanbanRepository(BaseRepository):
         await self.session.commit()
         return column
 
-    # tasks
-
-    async def create_task(self, column_id: int, data: TaskCreate):
-        task = Tasks(**data.__dict__, column_id=column_id, detail=[Tasks_detail()])
-        self.session.add(task)
+    # cards
+    async def move_card(self, card_id: int, column_id: int):
+        card = await self.session.get(Cards, card_id)
+        if not card:
+            raise HTTPException(status_code=404, detail="Task not found")
+        card.column_id = column_id
         await self.session.commit()
-        return task
-
-    async def del_task(self, task_id: int):
-        task = await self.session.get(Tasks, task_id)
-        await self.session.delete(task)
-        await self.session.commit()
-
-    async def update_task(self, task_id: int, data: dict):
-        task = await self.session.get(Tasks, task_id)
-        for key, value in data.__dict__.items():
-            if value is not None:
-                setattr(data, key, value)
-        await self.session.commit()
-        return task
-
-    async def move_task(self, task_id: int, column_id: int):
-        task = await self.session.get(Tasks, task_id)
-        task.column_id = column_id
-        await self.session.commit()
-        return task
-
-    async def get_task(self, task_id):
-        task = await self.session.get(Tasks, task_id)
-        return task
+        return card
