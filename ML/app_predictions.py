@@ -1,12 +1,17 @@
 import pickle
 import pandas as pd
 import numpy as np
+from fastapi import HTTPException
+from ML.app_training import generate_model
 
 
 def get_prediction(values, columns):
-    with open('C:\\Users\\Sayder\\PycharmProjects\\ProjectX3\\ML\\models\\traffic_forecast_model', 'rb') as f:
-        model_lgbm = pickle.load(f)
-
+    try:
+        with open('ML/models/traffic_forecast_model', 'rb') as f:
+            model_lgbm = pickle.load(f)
+    except FileNotFoundError:
+        generate_model()
+        raise HTTPException(status_code=500, detail="Model not found. Model was generated. Try again")
     np.random.seed(0)
     # Create a DataFrame with the desired structure
     data = pd.DataFrame(values, columns=columns)

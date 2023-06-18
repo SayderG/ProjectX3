@@ -60,3 +60,4 @@ class KanbanRepository(BaseRepository):
         card.column_id = column_id
         await self.session.commit()
         return card
+
