@@ -1,5 +1,4 @@
 import datetime
-from geoalchemy2 import Geometry
 from typing import Optional, Any, List
 from sqlmodel import SQLModel, Field, Column, ARRAY, NUMERIC
 from pydantic import condecimal, validator

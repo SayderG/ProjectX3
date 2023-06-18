@@ -41,7 +41,7 @@ async def create_column(funnel_id: int, column: ColumnCreate, db=Depends(AsyncDa
 async def get_column(funnel_id: int, db=Depends(AsyncDatabase.get_session)):
     columns = await KanbanRepository(db).get_columns(funnel_id)
     for column in columns:
-        column.count = len(column.tasks)
+        column.count = len(column.cards)
     if not columns:
         raise HTTPException(status_code=404, detail="Column not found")
     return columns
@@ -74,7 +74,7 @@ async def get_cards(column_id: int, db=Depends(AsyncDatabase.get_session)):
     column = await KanbanRepository(db).get_column(column_id)
     if not column:
         raise HTTPException(status_code=404, detail="Column not found")
-    return column.tasks
+    return column.cards
 
 
 @router.put("/columns/{column_id}/cards/{card_id}", response_model=CardRead)
