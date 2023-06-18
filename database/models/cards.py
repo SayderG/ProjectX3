@@ -21,6 +21,14 @@ class Cards(CardBase, table=True):
 
 
 class CardCreate(CardBase):
+    column_id: int
+
+    @validator('column_id')
+    def validate_column_id(cls, value):
+        if value >= 1:
+            return value
+        else:
+            raise HTTPException(404, detail='column_id most be >= 1')
 
     @validator('type')
     def validate_type(cls, value):

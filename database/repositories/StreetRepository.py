@@ -2,7 +2,6 @@ import datetime
 from database.repositories.BaseRepository import BaseRepository
 from database.models.streets import Streets, StreetReadWithPredict
 from ML.app_predictions import get_prediction
-from database.base import AsyncDatabase
 import asyncio
 from random import randint
 
@@ -36,13 +35,6 @@ class StreetRepository(BaseRepository):
                     i['predictions'] = pred['predictions']
                     lst.append(i)
         return lst
-
-
-async def main():
-    session_maker = await AsyncDatabase.get_session_maker()
-    session = session_maker()
-    date = datetime.datetime.now() + datetime.timedelta(hours=1)
-    await StreetRepository(session).predict(date)
 
 
 if __name__ == '__main__':

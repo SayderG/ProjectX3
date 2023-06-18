@@ -8,7 +8,7 @@ from database.models.cards import CardCreate, CardRead
 router = APIRouter()
 
 
-@router.post('/', name='create card', response_model=CardRead)
+@router.post('/', name='create card')
 async def create_card(card: CardCreate, session=Depends(AsyncDatabase.get_session)):
     return await CardRepository(session).create(card.__dict__)
 

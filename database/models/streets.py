@@ -5,7 +5,8 @@ from sqlmodel import SQLModel, Field, Column, ARRAY, NUMERIC
 
 
 class StreetBase(SQLModel):
-    point: List[List[condecimal(max_digits=18, decimal_places=15)]] = Field(sa_column=Column(ARRAY(NUMERIC, dimensions=2)))
+    point: List[List[condecimal(max_digits=18, decimal_places=15)]] = Field(
+        sa_column=Column(ARRAY(NUMERIC, dimensions=2)))
     street: str = Field(unique=True)
 
 
@@ -23,6 +24,7 @@ class StreetCreate(StreetBase):
 
 class StreetRead(StreetBase):
     id: int
+
 
 class StreetReadWithPredict(StreetRead):
     predictions: float
