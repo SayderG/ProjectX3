@@ -22,9 +22,9 @@ FROM python:3.10-slim AS build-image
 COPY --from=compile-image /opt/venv /opt/venv
 WORKDIR /app
 COPY . /app
-
+RUN apt-get update -y && apt-get install -y libgomp1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PATH="/opt/venv/bin:$PATH"
 
-CMD ["sh", "-c" , "uvicorn Api:app --host 0.0.0.0 --port 8000 --reload"]
+CMD ["sh", "-c" , "uvicorn api:app --host 0.0.0.0 --port 8000 --reload"]
