@@ -4,7 +4,7 @@ import numpy as np
 
 
 def get_prediction(values, columns):
-    with open('C:\\Users\\Sayder\\PycharmProjects\\ProjectX3\\ML\\models\\traffic_forecast_model', 'rb') as f:
+    with open('ML/models/traffic_forecast_model', 'rb') as f:
         model_lgbm = pickle.load(f)
 
     np.random.seed(0)

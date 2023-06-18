@@ -10,7 +10,7 @@ def generate_model(train_path: str = 'training_data.csv'):
     rmse, lag, window = find_best_time_series_params(df)
     model_lgbm = fit_lgbm_model(df, lag, window)
 
-    with open('ML/lmodels/traffic_forecast_model', 'wb') as f:
+    with open('ML/models/traffic_forecast_model', 'wb') as f:
         pickle.dump(model_lgbm, f)
     return 200
 
